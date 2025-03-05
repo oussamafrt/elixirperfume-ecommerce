@@ -1,13 +1,14 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function Nav() {
-    const inactiveLink = "flex gap-1 p-1 items-center hover:text-gray-300";
-    const activeLink = inactiveLink+" bg-white text-gray-900 rounded-l-lg";
+export default function Nav({show}) {
+    const inactiveLink = " flex gap-1 p-1 items-center";
+    const activeLink = inactiveLink+" bg-highlight text-gray-900 rounded-md";
     const router = useRouter();
     const {pathname} = router;
     return (
-        <aside className="bg-gray-900 text-white w-64 h-screen p-4 pr-0 flex flex-col space-y-6">
+        <aside className={(show?'left-0':'-left-full')+" top-0 text-gray-500 p-4 w-64 space-y-6 fixed w-full bg-bgGray h-ful md:static md:w-auto transition-all"}>
             {/* Logo / Branding */}
             <Link href={"/"} className="flex items-center space-x-2 hover:text-gray-300">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -15,7 +16,6 @@ export default function Nav() {
                 </svg>
                 <span className="text-lg font-semibold">ElixirPerfume-Admin</span>
             </Link>
-
             {/* Navigation */}
             <nav className="flex flex-col space-y-4">
                 <Link href={'/'} className={pathname === '/' ? activeLink : inactiveLink}>
@@ -49,6 +49,12 @@ export default function Nav() {
                     </svg>
                     <span className="text-lg font-semibold">Settings</span>
                 </Link>
+                <button onClick={() => signOut()} className={inactiveLink}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+                    </svg>
+                    <span className="text-lg font-semibold">Logout</span>
+                </button>
             </nav>
         </aside>
     );
