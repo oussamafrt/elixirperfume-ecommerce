@@ -8,7 +8,7 @@ export default function Nav({show}) {
     const router = useRouter();
     const {pathname} = router;
     return (
-        <aside className={(show?'left-0':'-left-full')+" top-0 text-gray-500 p-4 w-64 space-y-6 fixed w-full bg-bgGray h-ful md:static md:w-auto transition-all"}>
+        <aside className={(show?'left-0':'-left-full')+" top-0 text-gray-500 p-4 w-64 space-y-6 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"}>
             {/* Logo / Branding */}
             <Link href={"/"} className="flex items-center space-x-2 hover:text-gray-300">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
