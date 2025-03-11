@@ -22,9 +22,9 @@ export const ButtonStyle = css`
         border: 1px solid #fff;
     `}
     ${props => props.primary && css`
-        background-color: #5542F6;
+        background-color: #C8A35F;
         color: #fff;
-        border: 1px solid #5542F6;
+        border: 1px solid #C8A35F;
     `}
     ${props => props.size === 'l' && css`
         font-size: 1.2rem;
