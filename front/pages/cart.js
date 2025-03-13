@@ -5,6 +5,8 @@ import Button from "@/components/Button";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "@/components/CartContext";
 import axios from "axios";
+import Table from "@/components/Table";
+import Input from "@/components/Input";
 
 const ColumnsWrapper = styled.div`
     display: grid;
@@ -19,8 +21,36 @@ const Box = styled.div`
     padding: 30px;
 `;
 
+const ProductInfoCell = styled.td`
+    padding: 10px 0;
+`;
+
+const ProductImageBox = styled.div`
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    img{
+        max-width: 80px;
+        max-height: 80px;
+    }
+`;
+
+const QuantityLabel = styled.span`
+    padding: 0 3px;
+`;
+
+const CityHolder = styled.div`
+    display: flex;
+    gap: 5px;
+`;
+
 export default function CartPage() {
-    const {cartProducts} = useContext(CartContext);
+    const {cartProducts,addProduct,removeProduct} = useContext(CartContext);
     const [products, setProducts] = useState([]);
     useEffect(() => {
         if (cartProducts?.length > 0) {
@@ -29,6 +59,18 @@ export default function CartPage() {
             })
         }
     }, [cartProducts]);
+    function moreOfThisProduct(id) {
+        addProduct(id);
+    }
+    function lessOfThisProduct(id) {
+        removeProduct(id);
+    }
+    let total = 0;
+    for (const productId of cartProducts) {
+        const price = products.find(p => p._id === productId)?.price || 0;
+        total += price;
+    }
+
     return (
         <>
             <Header />
@@ -40,7 +82,7 @@ export default function CartPage() {
                         <div>Your cart is empty</div>
                     )}
                     {products?.length > 0 && (
-                        <table>
+                        <Table>
                             <thead>
                                 <tr>
                                     <th>Product</th>
@@ -51,25 +93,43 @@ export default function CartPage() {
                             <tbody>
                                 {products.map(product => (
                                     <tr>
-                                        <td>{product.title}</td>
+                                        <ProductInfoCell>
+                                            <ProductImageBox>
+                                                <img src={product.images[0]} alt="" />
+                                            </ProductImageBox>
+                                            {product.title}
+                                        </ProductInfoCell>
                                         <td>
-                                            {cartProducts.filter(id => id === product._id).length}
+                                            <Button onClick={() => lessOfThisProduct(product._id)}>-</Button>
+                                            <QuantityLabel>
+                                                {cartProducts.filter(id => id === product._id).length}
+                                            </QuantityLabel>
+                                            <Button onClick={() => moreOfThisProduct(product._id)}>+</Button>
                                         </td>
-                                        <td>Price</td>
+                                        <td>{cartProducts.filter(id => id === product._id).length * product.price}€</td>
                                     </tr>
                                 ))}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{total}€</td>
+                                </tr>
                             </tbody>
-                        </table>
+                        </Table>
                     )}
                 </Box>
                 {!!cartProducts?.length && (
                     <Box>
                         <h2>Order information</h2>
-                        <input type="text" placeholder="Full name" />
-                        <input type="text" placeholder="Email" />
-                        <input type="text" placeholder="Phone" />
-                        <input type="text" placeholder="Address" />
-                        <input type="text" placeholder="City" />
+                        <Input type="text" placeholder="Full name" />
+                        <Input type="text" placeholder="Email" />
+                        <Input type="text" placeholder="Phone" />
+                        <Input type="text" placeholder="Address" />
+                        <CityHolder>
+                            <Input type="text" placeholder="Postal code" />
+                            <Input type="text" placeholder="City" />
+                        </CityHolder>
+                        <Input type="text" placeholder="Country" />
                         <Button black block>Continue to payment</Button>
                     </Box>
                 )}
