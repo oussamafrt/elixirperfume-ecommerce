@@ -52,11 +52,20 @@ const CityHolder = styled.div`
 export default function CartPage() {
     const {cartProducts,addProduct,removeProduct} = useContext(CartContext);
     const [products, setProducts] = useState([]);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [postalCode, setPostalCode] = useState('');
+    const [city, setCity] = useState('');
+    const [country, setCountry] = useState('');
     useEffect(() => {
         if (cartProducts?.length > 0) {
             axios.post('/api/cart', {ids:cartProducts}).then(response => {
                 setProducts(response.data);
             })
+        } else {
+            setProducts([]);
         }
     }, [cartProducts]);
     function moreOfThisProduct(id) {
@@ -121,16 +130,19 @@ export default function CartPage() {
                 {!!cartProducts?.length && (
                     <Box>
                         <h2>Order information</h2>
-                        <Input type="text" placeholder="Full name" />
-                        <Input type="text" placeholder="Email" />
-                        <Input type="text" placeholder="Phone" />
-                        <Input type="text" placeholder="Address" />
-                        <CityHolder>
-                            <Input type="text" placeholder="Postal code" />
-                            <Input type="text" placeholder="City" />
-                        </CityHolder>
-                        <Input type="text" placeholder="Country" />
-                        <Button black block>Continue to payment</Button>
+                        <form method="post" action="/api/checkout">
+                            <Input type="text" placeholder="Name" value={name} name="name" onChange={ev => setName(ev.target.value)}/>
+                            <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
+                            <Input type="text" placeholder="Phone" value={phone} name="phone" onChange={ev => setPhone(ev.target.value)}/>
+                            <Input type="text" placeholder="Address" value={address} name="address" onChange={ev => setAddress(ev.target.value)}/>
+                            <CityHolder>
+                                <Input type="text" placeholder="Postal code" value={postalCode} name="postalCode" onChange={ev => setPostalCode(ev.target.value)}/>
+                                <Input type="text" placeholder="City" value={city} name="city" onChange={ev => setCity(ev.target.value)}/>
+                            </CityHolder>
+                            <Input type="text" placeholder="Country" value={country} name="country" onChange={ev => setCountry(ev.target.value)}/>
+                            <input type="hidden" name="products" value={cartProducts.join(',')} />
+                            <Button black block>Continue to payment</Button>
+                        </form>
                     </Box>
                 )}
             </ColumnsWrapper>
