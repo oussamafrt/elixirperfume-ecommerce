@@ -8,9 +8,9 @@ export default async function handler(req, res) {
         res.json({message: 'Hello from POST request'});
         return
     }
-    const {name,email,phone,address,postalCode,city,country,products} = req.body;
+    const {name,email,phone,address,postalCode,city,country,cartProducts} = req.body;
     await mongooseConnect();
-    const productsIds = products.split(',');
+    const productsIds = cartProducts;
     const uniqueIds = [...new Set(productsIds)];
     const productsInfos = await Product.find({_id:uniqueIds});
 
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
                 price_data: {
                     currency : 'eur',
                     product_data: {name: productInfo.title},
-                    unit_amount: quantity * productInfo.price,
+                    unit_amount: quantity * productInfo.price * 100,
                 },
             });
         }
